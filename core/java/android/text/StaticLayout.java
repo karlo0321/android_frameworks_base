@@ -237,267 +237,6 @@ extends Layout
             // as viable breakpoints, and that the entire run gets the
             // same bidi direction.
 
-			// Integration of StaticLayout from Eclair starts here.
-			// Froyo changed chdirs to chInfo inconsistently. chdirs
-			// was maintained here.
-			
-            if (!easy) {
-                AndroidCharacter.getDirectionalities(chs, chdirs, end - start);
-
-                /*
-                 * Determine primary paragraph direction - LTR unless paragraph contains RTL chars (anywhere)
-                 */
-				dir = DIR_LEFT_TO_RIGHT;
-                for (int j = start; j < end; j++) {
-                    int d = chdirs[j - start];
-					
-//                    if (d == Character.DIRECTIONALITY_LEFT_TO_RIGHT) {
-//                        dir = DIR_LEFT_TO_RIGHT;
-//                        break;
-//                    }
-                    if (d == Character.DIRECTIONALITY_RIGHT_TO_LEFT) {
-                        dir = DIR_RIGHT_TO_LEFT;
-                        break;
-                    }
-                }
-				
-                /*
-                 * XXX Explicit overrides should go here
-                 */
-				
-                /*
-                 * Weak type resolution
-                 */
-				
-                final byte SOR = dir == DIR_LEFT_TO_RIGHT ?
-				Character.DIRECTIONALITY_LEFT_TO_RIGHT :
-				Character.DIRECTIONALITY_RIGHT_TO_LEFT;
-				
-                // dump(chdirs, n, "initial");
-				
-                // W1 non spacing marks
-                for (int j = 0; j < n; j++) {
-                    if (chdirs[j] == Character.NON_SPACING_MARK) {
-                        if (j == 0)
-                            chdirs[j] = SOR;
-                        else
-                            chdirs[j] = chdirs[j - 1];
-                    }
-                }
-				
-                // dump(chdirs, n, "W1");
-				
-                // W2 european numbers
-                byte cur = SOR;
-                for (int j = 0; j < n; j++) {
-                    byte d = chdirs[j];
-					
-                    if (d == Character.DIRECTIONALITY_LEFT_TO_RIGHT ||
-                        d == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
-                        d == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC)
-                        cur = d;
-                    else if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER) {
-						if (cur ==
-                            Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC)
-                            chdirs[j] = Character.DIRECTIONALITY_ARABIC_NUMBER;
-                    }
-                }
-				
-                // dump(chdirs, n, "W2");
-				
-                // W3 arabic letters
-                for (int j = 0; j < n; j++) {
-                    if (chdirs[j] == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC)
-                        chdirs[j] = Character.DIRECTIONALITY_RIGHT_TO_LEFT;
-                }
-				
-                // dump(chdirs, n, "W3");
-				
-                // W4 single separator between numbers
-                for (int j = 1; j < n - 1; j++) {
-                    byte d = chdirs[j];
-                    byte prev = chdirs[j - 1];
-                    byte next = chdirs[j + 1];
-					// an attempt to deal with spaces
-					char c = chs[j];
-					char cc = chs[j + 1];
-					
-                    if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR) {
-                        if (prev == Character.DIRECTIONALITY_EUROPEAN_NUMBER &&
-                            next == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
-                            chdirs[j] = Character.DIRECTIONALITY_EUROPEAN_NUMBER;
-                    } else if (d == Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR) {
-                        if (prev == Character.DIRECTIONALITY_EUROPEAN_NUMBER &&
-                            next == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
-                            chdirs[j] = Character.DIRECTIONALITY_EUROPEAN_NUMBER;
-                        if (prev == Character.DIRECTIONALITY_ARABIC_NUMBER &&
-                            next == Character.DIRECTIONALITY_ARABIC_NUMBER)
-                            chdirs[j] = Character.DIRECTIONALITY_ARABIC_NUMBER;
- 			// add condition for spaces following the separator
- 			if (cc == ' ' &&
- 			    (   prev == Character.DIRECTIONALITY_EUROPEAN_NUMBER
- 			     || prev == Character.DIRECTIONALITY_ARABIC_NUMBER  ) )
- 			    chdirs[j] = SOR;
- 		    } 
- 		    // add condition if the separator is a space
- 		    else if (c == ' ' && prev != SOR &&
- 			    (   next == Character.DIRECTIONALITY_EUROPEAN_NUMBER
- 			     || next == Character.DIRECTIONALITY_ARABIC_NUMBER  ) ) {
- 			chdirs[j] = SOR;
- 			for (int k=j+1; k < n; ++k) {
- 			    if (chdirs[k] == Character.DIRECTIONALITY_LEFT_TO_RIGHT) {
- 				chdirs[j] = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
- 				break;
- 			    }
- 			    if (chdirs[k] == Character.DIRECTIONALITY_RIGHT_TO_LEFT) {
- 				chdirs[j] = Character.DIRECTIONALITY_RIGHT_TO_LEFT;
- 				break;
- 			    }
- 			}
- 		    }
- 		}
-				
-                // dump(chdirs, n, "W4");
-				
-                // W5 european number terminators
-                boolean adjacent = false;
-                for (int j = 0; j < n; j++) {
-                    byte d = chdirs[j];
-					
-                    if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
-                        adjacent = true;
-                    else if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR && adjacent)
-                        chdirs[j] = Character.DIRECTIONALITY_EUROPEAN_NUMBER;
-                    else
-                        adjacent = false;
-                }
-				
-                //dump(chdirs, n, "W5");
-				
-                // W5 european number terminators part 2,
-                // W6 separators and terminators
-                adjacent = false;
-                for (int j = n - 1; j >= 0; j--) {
-                    byte d = chdirs[j];
-					
-                    if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
-                        adjacent = true;
-                    else if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR) {
-                        if (adjacent)
-                            chdirs[j] = Character.DIRECTIONALITY_EUROPEAN_NUMBER;
-                        else
-                            chdirs[j] = Character.DIRECTIONALITY_OTHER_NEUTRALS;
-                    }
-                    else {
-                        adjacent = false;
-						
-                        if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR ||
-                            d == Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR ||
-                            d == Character.DIRECTIONALITY_PARAGRAPH_SEPARATOR ||
-                            d == Character.DIRECTIONALITY_SEGMENT_SEPARATOR)
-                            chdirs[j] = Character.DIRECTIONALITY_OTHER_NEUTRALS;
-                    }
-                }
-				
-                // dump(chdirs, n, "W6");
-				
-                // W7 strong direction of european numbers
-                cur = SOR;
-                for (int j = 0; j < n; j++) {
-                    byte d = chdirs[j];
-					
-                    if (d == SOR ||
-                        d == Character.DIRECTIONALITY_LEFT_TO_RIGHT ||
-                        d == Character.DIRECTIONALITY_RIGHT_TO_LEFT)
-                        cur = d;
-					
-                    if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
-                        chdirs[j] = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
-                }
-				
-                // dump(chdirs, n, "W7");
-				
-                // N1, N2 neutrals
-                cur = SOR;
-                for (int j = 0; j < n; j++) {
-                    byte d = chdirs[j];
-					
-                    if (d == Character.DIRECTIONALITY_LEFT_TO_RIGHT ||
-                        d == Character.DIRECTIONALITY_RIGHT_TO_LEFT) {
-                        cur = d;
-                    } else if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER ||
-                               d == Character.DIRECTIONALITY_ARABIC_NUMBER) {
-                        cur = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
-                    } else {
-                        byte dd = SOR;
-                        int k;
-						
-                        for (k = j + 1; k < n; k++) {
-                            dd = chdirs[k];
-							
-                            if (dd == Character.DIRECTIONALITY_LEFT_TO_RIGHT ||
-                                dd == Character.DIRECTIONALITY_RIGHT_TO_LEFT) {
-                                break;
-                            }
-                            if (dd == Character.DIRECTIONALITY_EUROPEAN_NUMBER ||
-                                dd == Character.DIRECTIONALITY_ARABIC_NUMBER) {
-                                dd = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
-                                break;
-                            }
-                        }
-						
-                        for (int y = j; y < k; y++) {
-                            if (dd == cur)
-                                chdirs[y] = cur;
-                            else
-                                chdirs[y] = SOR;
-                        }
-						
-                        j = k - 1;
-                    }
-                }
-				
-                // dump(chdirs, n, "final");
-				
-                // extra: enforce that all tabs and surrogate characters go the
-                // primary direction
-                // TODO: actually do directions right for surrogates
-				
-                for (int j = 0; j < n; j++) {
-                    char c = chs[j];
-					
-                    if (c == '\t' || (c >= 0xD800 && c <= 0xDFFF)) {
-                        chdirs[j] = SOR;
-                    }
-                }
-				
- 		// Deal specifically with special operators (like '+',etc.) ahead of numbers/english inside RTL paragraphs
- 		for (int j = 0; j < n; j++) {
- 		    switch(chs[j]) {
- 		    case '+':
- 		    // For the following chars it is logical to apply the fix, but it appears
- 		    // it customary only for the "+" and we want to behave similarly to other devices:
- 		    //case '*':
- 		    //case '/':
- 		    //case '@':
- 		    //case '#':
- 		    //case '$':
- 		    //case '%':
- 		    //case '^':
- 		    //case '&':
- 		    //case '_':
- 		    //case '\\':
- 			chdirs[j] = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
- 		    }
- 		}
-				
-                // extra: enforce that object replacements go to the
-                // primary direction
-                // and that none of the underlying characters are treated
-                // as viable breakpoints
-				
-				// End of insert from Eclair
-			
             if (source instanceof Spanned) {
                 Spanned sp = (Spanned) source;
                 ReplacementSpan[] spans = sp.getSpans(start, end, ReplacementSpan.class);
@@ -507,18 +246,14 @@ extends Layout
                     int b = sp.getSpanEnd(spans[y]);
 
                     for (int x = a; x < b; x++) {
-						chdirs[x - start] = SOR;
                         chs[x - start] = '\uFFFC';
                     }
                 }
             }
-	
-				// The following condition was already stated
-				// above in the Eclair insert. Notice inconsistency
-				// of chdirs and chdirs in Froyo code below!
-//				if (!easy) {
+
+            if (!easy) {
                 // XXX put override flags, etc. into chdirs
-//					dir = bidi(dir, chs, chdirs, n, false);
+                dir = bidi(dir, chs, chdirs, n, false);
 
                 // Do mirroring for right-to-left segments
 
@@ -816,7 +551,6 @@ extends Layout
                         fitascent = fitdescent = fittop = fitbottom = 0;
                         okascent = okdescent = oktop = okbottom = 0;
 
-						// The following line is a Froyo addition
                         if (--firstWidthLineCount <= 0) {
                             width = restwidth;
                         }
@@ -871,9 +605,243 @@ extends Layout
                     where, ellipsizedWidth, 0, paint);
         }
     }
-		
-		// Lines 609 through 840 of the original Froyo code are now redundant
-		// and were removed
+
+    /**
+     * Runs the unicode bidi algorithm on the first n chars in chs, returning
+     * the char dirs in chInfo and the base line direction of the first
+     * paragraph.
+     * 
+     * XXX change result from dirs to levels
+     *  
+     * @param dir the direction flag, either DIR_REQUEST_LTR,
+     * DIR_REQUEST_RTL, DIR_REQUEST_DEFAULT_LTR, or DIR_REQUEST_DEFAULT_RTL.
+     * @param chs the text to examine
+     * @param chInfo on input, if hasInfo is true, override and other flags 
+     * representing out-of-band embedding information. On output, the generated 
+     * dirs of the text.
+     * @param n the length of the text/information in chs and chInfo
+     * @param hasInfo true if chInfo has input information, otherwise the
+     * input data in chInfo is ignored.
+     * @return the resolved direction level of the first paragraph, either
+     * DIR_LEFT_TO_RIGHT or DIR_RIGHT_TO_LEFT.
+     */
+    /* package */ static int bidi(int dir, char[] chs, byte[] chInfo, int n, 
+            boolean hasInfo) {
+        
+        AndroidCharacter.getDirectionalities(chs, chInfo, n);
+
+        /*
+         * Determine primary paragraph direction if not specified
+         */
+        if (dir != DIR_REQUEST_LTR && dir != DIR_REQUEST_RTL) {
+            // set up default
+            dir = dir >= 0 ? DIR_LEFT_TO_RIGHT : DIR_RIGHT_TO_LEFT;
+            for (int j = 0; j < n; j++) {
+                int d = chInfo[j];
+
+                if (d == Character.DIRECTIONALITY_LEFT_TO_RIGHT) {
+                    dir = DIR_LEFT_TO_RIGHT;
+                    break;
+                }
+                if (d == Character.DIRECTIONALITY_RIGHT_TO_LEFT) {
+                    dir = DIR_RIGHT_TO_LEFT;
+                    break;
+                }
+            }
+        }
+
+        final byte SOR = dir == DIR_LEFT_TO_RIGHT ?
+                Character.DIRECTIONALITY_LEFT_TO_RIGHT :
+                Character.DIRECTIONALITY_RIGHT_TO_LEFT;
+
+        /*
+         * XXX Explicit overrides should go here
+         */
+
+        /*
+         * Weak type resolution
+         */
+
+        // dump(chdirs, n, "initial");
+
+        // W1 non spacing marks
+        for (int j = 0; j < n; j++) {
+            if (chInfo[j] == Character.NON_SPACING_MARK) {
+                if (j == 0)
+                    chInfo[j] = SOR;
+                else
+                    chInfo[j] = chInfo[j - 1];
+            }
+        }
+
+        // dump(chdirs, n, "W1");
+
+        // W2 european numbers
+        byte cur = SOR;
+        for (int j = 0; j < n; j++) {
+            byte d = chInfo[j];
+
+            if (d == Character.DIRECTIONALITY_LEFT_TO_RIGHT ||
+                d == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+                d == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC)
+                cur = d;
+            else if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER) {
+                 if (cur ==
+                    Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC)
+                    chInfo[j] = Character.DIRECTIONALITY_ARABIC_NUMBER;
+		else chInfo[j] = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
+            }
+        }
+
+        // dump(chdirs, n, "W2");
+
+        // W3 arabic letters
+        for (int j = 0; j < n; j++) {
+            if (chInfo[j] == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC)
+                chInfo[j] = Character.DIRECTIONALITY_RIGHT_TO_LEFT;
+        }
+
+        // dump(chdirs, n, "W3");
+
+        // W4 single separator between numbers
+        for (int j = 1; j < n - 1; j++) {
+            byte d = chInfo[j];
+            byte prev = chInfo[j - 1];
+            byte next = chInfo[j + 1];
+
+            if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR) {
+                if (prev == Character.DIRECTIONALITY_EUROPEAN_NUMBER &&
+                    next == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
+                    chInfo[j] = Character.DIRECTIONALITY_EUROPEAN_NUMBER;
+            } else if (d == Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR) {
+                if (prev == Character.DIRECTIONALITY_EUROPEAN_NUMBER &&
+                    next == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
+                    chInfo[j] = Character.DIRECTIONALITY_EUROPEAN_NUMBER;
+                if (prev == Character.DIRECTIONALITY_ARABIC_NUMBER &&
+                    next == Character.DIRECTIONALITY_ARABIC_NUMBER)
+                    chInfo[j] = Character.DIRECTIONALITY_ARABIC_NUMBER;
+            }
+        }
+
+        // dump(chdirs, n, "W4");
+
+        // W5 european number terminators
+        boolean adjacent = false;
+        for (int j = 0; j < n; j++) {
+            byte d = chInfo[j];
+
+            if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
+                adjacent = true;
+            else if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR && adjacent)
+                chInfo[j] = Character.DIRECTIONALITY_EUROPEAN_NUMBER;
+            else
+                adjacent = false;
+        }
+
+        //dump(chdirs, n, "W5");
+
+        // W5 european number terminators part 2,
+        // W6 separators and terminators
+        adjacent = false;
+        for (int j = n - 1; j >= 0; j--) {
+            byte d = chInfo[j];
+
+            if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
+                adjacent = true;
+            else if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR) {
+                if (adjacent)
+                    chInfo[j] = Character.DIRECTIONALITY_EUROPEAN_NUMBER;
+                else
+                    chInfo[j] = Character.DIRECTIONALITY_OTHER_NEUTRALS;
+            }
+            else {
+                adjacent = false;
+
+                if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR ||
+                    d == Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR ||
+                    d == Character.DIRECTIONALITY_PARAGRAPH_SEPARATOR ||
+                    d == Character.DIRECTIONALITY_SEGMENT_SEPARATOR)
+                    chInfo[j] = Character.DIRECTIONALITY_OTHER_NEUTRALS;
+            }
+        }
+
+        // dump(chdirs, n, "W6");
+
+        // W7 strong direction of european numbers
+        cur = SOR;
+        for (int j = 0; j < n; j++) {
+            byte d = chInfo[j];
+
+            if (d == SOR ||
+                d == Character.DIRECTIONALITY_LEFT_TO_RIGHT ||
+                d == Character.DIRECTIONALITY_RIGHT_TO_LEFT)
+                cur = d;
+
+            if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
+                chInfo[j] = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
+        }
+
+        // dump(chdirs, n, "W7");
+
+        // N1, N2 neutrals
+        cur = SOR;
+        for (int j = 0; j < n; j++) {
+            byte d = chInfo[j];
+
+            if (d == Character.DIRECTIONALITY_LEFT_TO_RIGHT ||
+                d == Character.DIRECTIONALITY_RIGHT_TO_LEFT) {
+                cur = d;
+            } else if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER) {
+                cur = Character.DIRECTIONALITY_RIGHT_TO_LEFT;
+            } else if (d == Character.DIRECTIONALITY_ARABIC_NUMBER) {
+                cur = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
+            } else {
+                byte dd = SOR;
+                int k;
+
+                for (k = j + 1; k < n; k++) {
+                    dd = chInfo[k];
+
+                    if (dd == Character.DIRECTIONALITY_LEFT_TO_RIGHT ||
+                        dd == Character.DIRECTIONALITY_RIGHT_TO_LEFT) {
+                        break;
+                    }
+                    if (dd == Character.DIRECTIONALITY_EUROPEAN_NUMBER) {
+                        dd = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
+                        break;
+                    } else if (dd == Character.DIRECTIONALITY_ARABIC_NUMBER) {
+                        dd = Character.DIRECTIONALITY_RIGHT_TO_LEFT;
+                        break;
+                    }
+                }
+
+                for (int y = j; y < k; y++) {
+                    if (dd == cur)
+                        chInfo[y] = cur;
+                    else
+                        chInfo[y] = SOR;
+                }
+
+                j = k - 1;
+            }
+        }
+
+        // dump(chdirs, n, "final");
+
+        // extra: enforce that all tabs and surrogate characters go the
+        // primary direction
+        // TODO: actually do directions right for surrogates
+
+        for (int j = 0; j < n; j++) {
+            char c = chs[j];
+
+            if (c == '\t' || (c >= 0xD800 && c <= 0xDFFF)) {
+                chInfo[j] = SOR;
+            }
+        }
+        
+        return dir;
+    }
 
     private static final char FIRST_CJK = '\u2E80';
     /**
@@ -1076,8 +1044,6 @@ extends Layout
 
         int extra;
 
-		// The following is new code from Froyo. Below is the Eclair version.
-		
         if (needMultiply) {
             double ex = (below - above) * (spacingmult - 1) + spacingadd;
             if (ex >= 0) {
@@ -1088,13 +1054,6 @@ extends Layout
         } else {
             extra = 0;
         }
-		
-		// if (needMultiply) {
-		// extra = (int) ((below - above) * (spacingmult - 1)
-		// + spacingadd + 0.5);
-		// } else {
-		// extra = 0;
-		// }
 
         lines[off + START] = start;
         lines[off + TOP] = v;
@@ -1289,14 +1248,7 @@ extends Layout
     }
 
     public int getParagraphDirection(int line) {
-// Next line is the original Froyo    
-//        return mLines[mColumns * line + DIR] >> DIR_SHIFT;
-		// The following line should replace the previous one
-		// if we want to use dudyk character-counting menthod
-		// for determining directionality
-// return Directions.baseDirection(mLineDirections[line],getLineEnd(line)-getLineStart(line));
-// Erasmux fix: LTR unless paragraph contains RTL chars (anywhere)
-	return mLineDirections[line].hasRTL() ? DIR_RIGHT_TO_LEFT : DIR_LEFT_TO_RIGHT;
+        return Directions.baseDirection(mLineDirections[line],getLineEnd(line)-getLineStart(line));
     }
 
     public boolean getLineContainsTab(int line) {
