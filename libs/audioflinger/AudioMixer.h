@@ -32,13 +32,6 @@ namespace android {
 #define LIKELY( exp )       (__builtin_expect( (exp) != 0, true  ))
 #define UNLIKELY( exp )     (__builtin_expect( (exp) != 0, false ))
 
-struct dither_t {
-    /* Dithering variables */
-    int32_t         errorL, errorR;
-    int32_t         lipshitzL[4], lipshitzR[4];
-    int32_t         oldDither;
-};
-
 // ----------------------------------------------------------------------------
 
 class AudioMixer
@@ -93,7 +86,7 @@ public:
 
     uint32_t    trackNames() const { return mTrackNames; }
 
-    static void ditherAndClamp(dither_t* dither, int32_t* out, const int32_t* sums, size_t c);
+    static void ditherAndClamp(int32_t* out, int32_t const *sums, size_t c);
 
 private:
     enum {
@@ -169,10 +162,7 @@ private:
         int32_t         *outputTemp;
         int32_t         *resampleTemp;
         int32_t         reserved[2];
-        track_t         tracks[32];
-
-        dither_t        dither;
-        __attribute__((aligned(32)));
+        track_t         tracks[32]; __attribute__((aligned(32)));
     };
 
     int             mActiveTrack;
@@ -184,7 +174,6 @@ private:
 
     void invalidateState(uint32_t mask);
 
-    static int32_t lipshitz(int32_t* state, int32_t input);
     static void track__genericResample(track_t* t, int32_t* out, size_t numFrames, int32_t* temp, AudioDSP& dsp);
     static void track__nop(track_t* t, int32_t* out, size_t numFrames, int32_t* temp, AudioDSP& dsp);
     static void volumeRampStereo(track_t* t, int32_t* out, size_t frameCount, int32_t* temp, AudioDSP& dsp);
