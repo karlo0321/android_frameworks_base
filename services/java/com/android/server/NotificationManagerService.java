@@ -310,6 +310,10 @@ class NotificationManagerService extends INotificationManager.Stub
                     Notification.FLAG_FOREGROUND_SERVICE);
         }
 
+        public void onNotificationClear(String pkg, String tag, int id) {
+            cancelNotification(pkg, tag, id, 0, Notification.FLAG_FOREGROUND_SERVICE);
+        }
+
         public void onPanelRevealed() {
             synchronized (mNotificationList) {
                 // sound
@@ -861,7 +865,8 @@ class NotificationManagerService extends INotificationManager.Stub
                 // sound
                 final boolean useDefaultSound =
                     (notification.defaults & Notification.DEFAULT_SOUND) != 0;
-                if ((inQuietHours && !mQuietHoursMute) && (useDefaultSound || notification.sound != null)) {
+                if (!(inQuietHours && mQuietHoursMute)
+                        && (useDefaultSound || notification.sound != null)) {
                     Uri uri;
                     if (useDefaultSound) {
                         uri = Settings.System.DEFAULT_NOTIFICATION_URI;
@@ -892,7 +897,8 @@ class NotificationManagerService extends INotificationManager.Stub
                 // vibrate
                 final boolean useDefaultVibrate =
                     (notification.defaults & Notification.DEFAULT_VIBRATE) != 0;
-                if ((inQuietHours && !mQuietHoursStill) && (useDefaultVibrate || notification.vibrate != null)
+                if (!(inQuietHours && mQuietHoursStill)
+                        && (useDefaultVibrate || notification.vibrate != null)
                         && audioManager.shouldVibrate(AudioManager.VIBRATE_TYPE_NOTIFICATION)) {
                     mVibrateNotification = r;
 
