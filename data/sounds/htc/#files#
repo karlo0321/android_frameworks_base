@@ -1,0 +1,62 @@
+	$(LOCAL_PATH)/newwavelabs/BeatPlucker.ogg:system/media/audio/ringtones/BeatPlucker.ogg \
+	$(LOCAL_PATH)/htc/alarms/Classic.mp3:system/media/audio/alarms/Classic.mp3 \
+	$(LOCAL_PATH)/htc/alarms/Instance.mp3:system/media/audio/alarms/Instance.mp3 \
+	$(LOCAL_PATH)/htc/alarms/Light.mp3:system/media/audio/alarms/Light.mp3 \
+	$(LOCAL_PATH)/htc/alarms/Positive.mp3:system/media/audio/alarms/Positive.mp3 \
+	$(LOCAL_PATH)/htc/alarms/Snooze.mp3:system/media/audio/alarms/Snooze.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Ascend.mp3:system/media/audio/notifications/Ascend.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Bubble.mp3:system/media/audio/notifications/Bubble.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Chiff.mp3:system/media/audio/notifications/Chiff.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Color.mp3:system/media/audio/notifications/Color.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Confirm.mp3:system/media/audio/notifications/Confirm.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Dream.mp3:system/media/audio/notifications/Dream.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Dribble.mp3:system/media/audio/notifications/Dribble.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Freeze.mp3:system/media/audio/notifications/Freeze.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Friendly.mp3:system/media/audio/notifications/Friendly.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Guitar_1.mp3:system/media/audio/notifications/Guitar_1.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Guitar_2.mp3:system/media/audio/notifications/Guitar_2.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Little.mp3:system/media/audio/notifications/Little.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Major.mp3:system/media/audio/notifications/Major.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Modern.mp3:system/media/audio/notifications/Modern.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Pebbles.mp3:system/media/audio/notifications/Pebbles.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Ripple.mp3:system/media/audio/notifications/Ripple.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Simple_High.mp3:system/media/audio/notifications/Simple_High.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Simple_Low.mp3:system/media/audio/notifications/Simple_Low.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Soft.mp3:system/media/audio/notifications/Soft.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Spacious.mp3:system/media/audio/notifications/Spacious.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Subtle.mp3:system/media/audio/notifications/Subtle.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Teleport.mp3:system/media/audio/notifications/Teleport.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Vector.mp3:system/media/audio/notifications/Vector.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Weight.mp3:system/media/audio/notifications/Weight.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Woodblock.mp3:system/media/audio/notifications/Woodblock.mp3 \
+	$(LOCAL_PATH)/htc/notifications/Zing.mp3:system/media/audio/notifications/Zing.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/2_Step.mp3:system/media/audio/ringtones/2_Step.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Alpha.mp3:system/media/audio/ringtones/Alpha.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Aqua.mp3:system/media/audio/ringtones/Aqua.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Around.mp3:system/media/audio/ringtones/Around.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Blippy.mp3:system/media/audio/ringtones/Blippy.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Cobblestone.mp3:system/media/audio/ringtones/Cobblestone.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Curve.mp3:system/media/audio/ringtones/Curve.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Fire_Fly.mp3:system/media/audio/ringtones/Fire_Fly.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Friday.mp3:system/media/audio/ringtones/Friday.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Funk.mp3:system/media/audio/ringtones/Funk.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Glass.mp3:system/media/audio/ringtones/Glass.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Happy.mp3:system/media/audio/ringtones/Happy.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Heavy.mp3:system/media/audio/ringtones/Heavy.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Innovation.mp3:system/media/audio/ringtones/Innovation.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Jack.mp3:system/media/audio/ringtones/Jack.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/K.O..mp3:system/media/audio/ringtones/K.O..mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Old_Phone.mp3:system/media/audio/ringtones/Old_Phone.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Potluck.mp3:system/media/audio/ringtones/Potluck.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Red_Tea.mp3:system/media/audio/ringtones/Red_Tea.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Reset.mp3:system/media/audio/ringtones/Reset.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Rhino.mp3:system/media/audio/ringtones/Rhino.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Riffing.mp3:system/media/audio/ringtones/Riffing.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Shocking.mp3:system/media/audio/ringtones/Shocking.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Solaris.mp3:system/media/audio/ringtones/Solaris.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Standard_1.mp3:system/media/audio/ringtones/Standard_1.mp3 \
+	$(LOCAL_PATH)/htc/ringtones/Standard_2.mp3:system/media/au
+htc/ringtones/Standard_3.mp3
+htc/ringtones/Standard_4.mp3
+htc/ringtones/Whistler.mp3
+htc/ringtones/Windchimer.mp3
