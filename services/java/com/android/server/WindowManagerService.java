@@ -503,8 +503,8 @@ public class WindowManagerService extends IWindowManager.Stub
 
     PowerManagerService mPowerManager;
 
-    float mWindowAnimationScale = 1.0f;
-    float mTransitionAnimationScale = 1.0f;
+    float mWindowAnimationScale = 0.0f;
+    float mTransitionAnimationScale = 0.0f;
 
     final KeyWaiter mKeyWaiter = new KeyWaiter();
     final KeyQ mQueue;
