@@ -430,7 +430,6 @@ public class StatusBarPolicy {
         // clock
         mCalendar = Calendar.getInstance(TimeZone.getDefault());
         mClockData = IconData.makeText("clock", "", Settings.System.CLOCK_COLOR, Settings.System.SHOW_STATUS_CLOCK, true);
-	mClockData.textColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.CLOCK_COLOR, -1184275);
         mClockIcon = service.addIcon(mClockData, null);
         updateClock();
 
@@ -453,7 +452,6 @@ public class StatusBarPolicy {
 
         // dbm signal level
         mPhoneDbmData = IconData.makeText("phone_dbm_signal", "", Settings.System.DBM_COLOR, Settings.System.SHOW_STATUS_DBM, false);
-	mPhoneDbmData.textColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.DBM_COLOR, -1184275);
         mPhoneDbmIcon = service.addIcon(mPhoneDbmData, null);
 
         // register for phone state notifications.
@@ -695,7 +693,7 @@ public class StatusBarPolicy {
         //show battery percentage if not plugged in and status is enabled
         if (plugged || level >= 100 ||
                 Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.BATTERY_PERCENTAGE_STATUS_ICON, 1) == 0) {
+                Settings.System.BATTERY_PERCENTAGE_STATUS_ICON, 0) == 0) {
             mBatteryData.number = -1;
         } else {
             mBatteryData.number = level;
