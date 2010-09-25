@@ -443,7 +443,7 @@ public class StatusBarPolicy {
                 null, com.android.internal.R.drawable.stat_sys_battery_unknown, 0, 0,
                 Settings.System.BATTERY_PERCENTAGE_STATUS_COLOR);
 	mBatteryData.textColor = Settings.System.getInt(mContext.getContentResolver(),
-							Settings.System.BATTERY_PERCENTAGE_STATUS_COLOR, blackColor);
+							Settings.System.BATTERY_PERCENTAGE_STATUS_COLOR, 0xff000000);
         mBatteryIcon = service.addIcon(mBatteryData, null);
 
         // phone_signal
