@@ -1735,10 +1735,17 @@ public abstract class Layout {
      */
     public static class Directions {
         private short[] mDirections;
-
+        // The values in mDirections are the offsets from the last flip in direction
+	// in the line to the next flip in direction.  Runs at even indices
+	// are left-to-right, the others are right-to-left.  So, for example,
+	// a line that starts with a right-to-left run has 0 at mDirections[0],
         /* package */ Directions(short[] dirs) {
             mDirections = dirs;
         }
+
+	boolean hasRTL() {
+	    return mDirections.length>1 && mDirections[1]>0;
+	}
     }
 
     /**

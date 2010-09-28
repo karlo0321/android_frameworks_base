@@ -232,16 +232,11 @@ extends Layout
                 AndroidCharacter.getDirectionalities(chs, chdirs, end - start);
 
                 /*
-                 * Determine primary paragraph direction
+                 * Determine primary paragraph direction - LTR unless paragraph contains RTL chars (anywhere)
                  */
-
+		dir = DIR_LEFT_TO_RIGHT;
                 for (int j = start; j < end; j++) {
                     int d = chdirs[j - start];
-
-                    if (d == Character.DIRECTIONALITY_LEFT_TO_RIGHT) {
-                        dir = DIR_LEFT_TO_RIGHT;
-                        break;
-                    }
                     if (d == Character.DIRECTIONALITY_RIGHT_TO_LEFT) {
                         dir = DIR_RIGHT_TO_LEFT;
                         break;
@@ -305,6 +300,9 @@ extends Layout
                     byte d = chdirs[j];
                     byte prev = chdirs[j - 1];
                     byte next = chdirs[j + 1];
+		    // an attempt to deal with spaces
+		    char c = chs[j];
+		    char cc = chs[j + 1];
 
                     if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR) {
                         if (prev == Character.DIRECTIONALITY_EUROPEAN_NUMBER &&
@@ -317,9 +315,29 @@ extends Layout
                         if (prev == Character.DIRECTIONALITY_ARABIC_NUMBER &&
                             next == Character.DIRECTIONALITY_ARABIC_NUMBER)
                             chdirs[j] = Character.DIRECTIONALITY_ARABIC_NUMBER;
-                    }
-                }
-
+			// add condition for spaces following the separator
+			if (cc == ' ' &&
+			    (   prev == Character.DIRECTIONALITY_EUROPEAN_NUMBER
+			     || prev == Character.DIRECTIONALITY_ARABIC_NUMBER  ) )
+			    chdirs[j] = SOR;
+		    } 
+		    // add condition if the separator is a space
+		    else if (c == ' ' && prev != SOR &&
+			    (   next == Character.DIRECTIONALITY_EUROPEAN_NUMBER
+			     || next == Character.DIRECTIONALITY_ARABIC_NUMBER  ) ) {
+			chdirs[j] = SOR;
+			for (int k=j+1; k < n; ++k) {
+			    if (chdirs[k] == Character.DIRECTIONALITY_LEFT_TO_RIGHT) {
+				chdirs[j] = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
+				break;
+			    }
+			    if (chdirs[k] == Character.DIRECTIONALITY_RIGHT_TO_LEFT) {
+				chdirs[j] = Character.DIRECTIONALITY_RIGHT_TO_LEFT;
+				break;
+			    }
+			}
+		    }
+		}
                 // dump(chdirs, n, "W4");
 
                 // W5 european number terminators
@@ -375,7 +393,7 @@ extends Layout
                         cur = d;
 
                     if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER)
-                        chdirs[j] = cur;
+                        chdirs[j] = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
                 }
 
                 // dump(chdirs, n, "W7");
@@ -390,7 +408,7 @@ extends Layout
                         cur = d;
                     } else if (d == Character.DIRECTIONALITY_EUROPEAN_NUMBER ||
                                d == Character.DIRECTIONALITY_ARABIC_NUMBER) {
-                        cur = Character.DIRECTIONALITY_RIGHT_TO_LEFT;
+                        cur = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
                     } else {
                         byte dd = SOR;
                         int k;
@@ -404,7 +422,7 @@ extends Layout
                             }
                             if (dd == Character.DIRECTIONALITY_EUROPEAN_NUMBER ||
                                 dd == Character.DIRECTIONALITY_ARABIC_NUMBER) {
-                                dd = Character.DIRECTIONALITY_RIGHT_TO_LEFT;
+                                dd = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
                                 break;
                             }
                         }
@@ -433,6 +451,26 @@ extends Layout
                         chdirs[j] = SOR;
                     }
                 }
+
+		// Deal specifically with special operators (like '+',etc.) ahead of numbers/english inside RTL paragraphs
+		for (int j = 0; j < n; j++) {
+		    switch(chs[j]) {
+		    case '+':
+		    // For the following chars it is logical to apply the fix, but it appears
+		    // it customary only for the "+" and we want to behave similarly to other devices:
+		    //case '*':
+		    //case '/':
+		    //case '@':
+		    //case '#':
+		    //case '$':
+		    //case '%':
+		    //case '^':
+		    //case '&':
+		    //case '_':
+		    //case '\\':
+			chdirs[j] = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
+		    }
+		}
 
                 // extra: enforce that object replacements go to the
                 // primary direction
@@ -1204,7 +1242,8 @@ extends Layout
     }
 
     public int getParagraphDirection(int line) {
-        return mLines[mColumns * line + DIR] >> DIR_SHIFT;
+	// LTR unless paragraph contains RTL chars (anywhere)
+	return mLineDirections[line].hasRTL() ? DIR_RIGHT_TO_LEFT : DIR_LEFT_TO_RIGHT;
     }
 
     public boolean getLineContainsTab(int line) {
