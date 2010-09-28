@@ -696,7 +696,6 @@ extends Layout
                  if (cur ==
                     Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC)
                     chInfo[j] = Character.DIRECTIONALITY_ARABIC_NUMBER;
-		else chInfo[j] = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
             }
         }
 
