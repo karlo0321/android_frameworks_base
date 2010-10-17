@@ -240,11 +240,11 @@ public class StatusBarService extends IStatusBar.Stub
     int[] mAbsPos = new int[2];
     private int blackColor = 0xff000000;
     private int whiteColor = 0xffffffff;
-    private int notificationTitleColor = blackColor;
-    private int notificationTextColor = blackColor;
-    private int notificationTimeColor = blackColor;
-    boolean custNotBar = false;
-    boolean custExpBar = false;
+    private int notificationTitleColor = whiteColor;
+    private int notificationTextColor = whiteColor;
+    private int notificationTimeColor = whiteColor;
+    boolean custNotBar = true;
+    boolean custExpBar = true;
     int notifBarColorMask;
     int expBarColorMask;
     Mode notifPDMode = Mode.SCREEN;
@@ -264,9 +264,9 @@ public class StatusBarService extends IStatusBar.Stub
      */
     public StatusBarService(Context context) {
         mContext = context;
-        notificationTitleColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NOTIF_ITEM_TITLE_COLOR, blackColor);
-        notificationTextColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NOTIF_ITEM_TEXT_COLOR, blackColor);
-        notificationTimeColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NOTIF_ITEM_TIME_COLOR, blackColor);
+        notificationTitleColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NOTIF_ITEM_TITLE_COLOR, whiteColor);
+        notificationTextColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NOTIF_ITEM_TEXT_COLOR, whiteColor);
+        notificationTimeColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NOTIF_ITEM_TIME_COLOR, whiteColor);
         mDisplay = ((WindowManager)context.getSystemService(
                 Context.WINDOW_SERVICE)).getDefaultDisplay();
         makeStatusBarView(context);
@@ -1850,14 +1850,14 @@ public class StatusBarService extends IStatusBar.Stub
     }
     
     private void updateColors() {
-        mDateView.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.DATE_COLOR, blackColor));
+        mDateView.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.DATE_COLOR, whiteColor));
         mNoNotificationsTitle.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.NO_NOTIF_COLOR, whiteColor));
         mLatestTitle.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.LATEST_NOTIF_COLOR, whiteColor));
         mOngoingTitle.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.ONGOING_NOTIF_COLOR, whiteColor));
-        mSpnLabel.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.SPN_LABEL_COLOR, blackColor));
-        mPlmnLabel.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.PLMN_LABEL_COLOR, blackColor));
+        mSpnLabel.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.SPN_LABEL_COLOR, whiteColor));
+        mPlmnLabel.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.PLMN_LABEL_COLOR, whiteColor));
         mClearButton.setTextColor(Settings.System.getInt(mContext.getContentResolver(), Settings.System.CLEAR_BUTTON_LABEL_COLOR, blackColor));
-        tickerView.updateColors(Settings.System.getInt(mContext.getContentResolver(), Settings.System.NEW_NOTIF_TICKER_COLOR, blackColor));
+        tickerView.updateColors(Settings.System.getInt(mContext.getContentResolver(), Settings.System.NEW_NOTIF_TICKER_COLOR, whiteColor));
     }
 
     private View.OnClickListener mClearButtonListener = new View.OnClickListener() {
@@ -2019,9 +2019,9 @@ public class StatusBarService extends IStatusBar.Stub
     	 * Setup color and bar type for notification strip
     	 */
     	boolean useCustom = Settings.System.getInt(mContext.getContentResolver(),
-       	        Settings.System.NOTIF_BAR_CUSTOM, 0) == 1;
+                Settings.System.NOTIF_BAR_CUSTOM, 1) == 1;
         notifBarColorMask = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.NOTIF_BAR_COLOR, whiteColor);
+                Settings.System.NOTIF_BAR_COLOR, blackColor);
         if (useCustom) {
           	custNotBar = true;
         } else {
@@ -2031,9 +2031,9 @@ public class StatusBarService extends IStatusBar.Stub
          * Setup colors for expanded notification drawables
         */
         boolean useCustomExp = Settings.System.getInt(mContext.getContentResolver(),
-       	        Settings.System.NOTIF_EXPANDED_BAR_CUSTOM, 0) == 1;
+                Settings.System.NOTIF_EXPANDED_BAR_CUSTOM, 1) == 1;
         expBarColorMask = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.NOTIF_EXPANDED_BAR_COLOR, whiteColor);
+                Settings.System.NOTIF_EXPANDED_BAR_COLOR, 0x80000000);
         int noalpha = expBarColorMask | 0xFF000000; 
         if (useCustomExp) {
         	closerDrawable = res.getDrawable(com.android.internal.R.drawable.status_bar_close_on_cust);
