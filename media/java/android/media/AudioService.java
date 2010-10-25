@@ -1129,29 +1129,24 @@ public class AudioService extends IAudioService.Stub {
     private boolean checkForRingerModeChange(int oldIndex, int direction) {
         boolean adjustVolumeIndex = true;
         int newRingerMode = mRingerMode;
-	boolean vibrateInSilent = System.getInt(mContentResolver, System.VIBRATE_IN_SILENT, 1) == 1;
 
         if (mRingerMode == AudioManager.RINGER_MODE_NORMAL) {
             // audible mode, at the bottom of the scale
             if (direction == AudioManager.ADJUST_LOWER
                     && (oldIndex + 5) / 10 == 1) {
-                newRingerMode = AudioManager.RINGER_MODE_SILENT;
+                // "silent mode", but which one?
+                newRingerMode = System.getInt(mContentResolver, System.VIBRATE_IN_SILENT, 1) == 1
+                    ? AudioManager.RINGER_MODE_VIBRATE
+                    : AudioManager.RINGER_MODE_SILENT;
             }
         } else {
             if (direction == AudioManager.ADJUST_RAISE) {
-		if (vibrateInSilent && mRingerMode == AudioManager.RINGER_MODE_VIBRATE) {
-		    newRingerMode = AudioManager.RINGER_MODE_SILENT;
-		} else {
-		    // exiting silent mode
-		    newRingerMode = AudioManager.RINGER_MODE_NORMAL;
-		}
-            } else if (direction == AudioManager.ADJUST_LOWER && vibrateInSilent 
-		       && mRingerMode == AudioManager.RINGER_MODE_SILENT) {
-		    newRingerMode = AudioManager.RINGER_MODE_VIBRATE;
-	    } else {
-		// prevent last audible index to reach 0
-		adjustVolumeIndex = false;
-	    }
+                // exiting silent mode
+                newRingerMode = AudioManager.RINGER_MODE_NORMAL;
+            } else {
+                // prevent last audible index to reach 0
+                adjustVolumeIndex = false;
+            }
         }
 
         if (newRingerMode != mRingerMode) {
