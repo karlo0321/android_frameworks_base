@@ -794,7 +794,7 @@ public class ConnectivityService extends IConnectivityManager.Stub {
     public boolean getMobileDataEnabled() {
         enforceAccessPermission();
         boolean retVal = Settings.Secure.getInt(mContext.getContentResolver(),
-                Settings.Secure.MOBILE_DATA, 1) == 1;
+                Settings.Secure.MOBILE_DATA, 0) == 1;
         if (DBG) Slog.d(TAG, "getMobileDataEnabled returning " + retVal);
         return retVal;
     }
