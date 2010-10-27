@@ -2230,7 +2230,7 @@ public class StatusBarService extends IStatusBar.Stub
     	boolean useCustom = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.NOTIF_BAR_CUSTOM, 1) == 1;
         notifBarColorMask = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.NOTIF_BAR_COLOR, blackColor);
+                Settings.System.NOTIF_BAR_COLOR, 0xFF151520);
         if (useCustom) {
           	custNotBar = true;
         } else {
@@ -2242,7 +2242,7 @@ public class StatusBarService extends IStatusBar.Stub
         boolean useCustomExp = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.NOTIF_EXPANDED_BAR_CUSTOM, 1) == 1;
         expBarColorMask = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.NOTIF_EXPANDED_BAR_COLOR, 0x80000000);
+                Settings.System.NOTIF_EXPANDED_BAR_COLOR, 0x80151520);
         int noalpha = expBarColorMask | 0xFF000000; 
         if (useCustomExp) {
         	closerDrawable = res.getDrawable(com.android.internal.R.drawable.status_bar_close_on_cust);
