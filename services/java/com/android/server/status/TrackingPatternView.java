@@ -74,9 +74,9 @@ public class TrackingPatternView extends View {
     
     private void setTexture() {
     	boolean useCustomExp = Settings.System.getInt(mContext.getContentResolver(),
-       	        Settings.System.NOTIF_EXPANDED_BAR_CUSTOM, 0) == 1;
+                       Settings.System.NOTIF_EXPANDED_BAR_CUSTOM, 1) == 1;
     	int expBarColorMask = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.NOTIF_EXPANDED_BAR_COLOR, 0xFF000000);
+                Settings.System.NOTIF_EXPANDED_BAR_COLOR, 0x80000000);
         if (useCustomExp) {
         	Bitmap tempbm = BitmapFactory.decodeResource(getResources(), 
                     com.android.internal.R.drawable.status_bar_background_cust);

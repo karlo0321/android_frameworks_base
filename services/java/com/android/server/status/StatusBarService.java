@@ -2230,7 +2230,7 @@ public class StatusBarService extends IStatusBar.Stub
     	boolean useCustom = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.NOTIF_BAR_CUSTOM, 1) == 1;
         notifBarColorMask = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.NOTIF_BAR_COLOR, -1);
+                Settings.System.NOTIF_BAR_COLOR, 0xFF000000);
         if (useCustom) {
           	custNotBar = true;
         } else {
