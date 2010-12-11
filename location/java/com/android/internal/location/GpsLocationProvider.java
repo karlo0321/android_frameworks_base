@@ -216,6 +216,9 @@ public class GpsLocationProvider implements LocationProviderInterface {
     // true if we started navigation
     private boolean mStarted;
 
+    // true if XTRA is supported
+    private boolean mSupportsXtra;
+
     // for calculating time to first fix
     private long mFixRequestTime = 0;
     // time to first fix for most recent session
@@ -348,10 +351,6 @@ public class GpsLocationProvider implements LocationProviderInterface {
     public GpsLocationProvider(Context context, ILocationManager locationManager) {
         mContext = context;
         mLocationManager = locationManager;
-
-        mDownloadXtraDataPending = context.getResources().getBoolean(
-                com.android.internal.R.bool.config_gps_xtra_download_on_boot);
-
         mNIHandler = new GpsNetInitiatedHandler(context, this);
 
         mLocation.setExtras(mLocationExtras);
@@ -527,7 +526,7 @@ public class GpsLocationProvider implements LocationProviderInterface {
     }
 
     private void handleDownloadXtraData() {
-        if (!mDownloadXtraDataPending) {
+        if (!mNetworkAvailable) {
             // try again when network is up
             mDownloadXtraDataPending = true;
             return;
@@ -541,7 +540,11 @@ public class GpsLocationProvider implements LocationProviderInterface {
             if (DEBUG) {
                 Log.d(TAG, "calling native_inject_xtra_data");
             }
-            native_inject_xtra_data(data, data.length);
+            if (!native_inject_xtra_data(data, data.length)) {
+                // try again later
+                mHandler.removeMessages(DOWNLOAD_XTRA_DATA);
+                mHandler.sendMessageDelayed(Message.obtain(mHandler, DOWNLOAD_XTRA_DATA), RETRY_INTERVAL);
+            }
         } else {
             // try again later
             mHandler.removeMessages(DOWNLOAD_XTRA_DATA);
@@ -664,6 +667,7 @@ public class GpsLocationProvider implements LocationProviderInterface {
         mEnabled = native_init();
 
         if (mEnabled) {
+            mSupportsXtra = native_supports_xtra();
             if (mSuplServerHost != null) {
                 native_set_agps_server(AGPS_TYPE_SUPL, mSuplServerHost, mSuplServerPort);
             }
@@ -865,7 +869,7 @@ public class GpsLocationProvider implements LocationProviderInterface {
             return true;
         }
         if ("force_xtra_injection".equals(command)) {
-            if (native_supports_xtra()) {
+            if (mSupportsXtra) {
                 xtraDownloadRequest();
                 return true;
             }
@@ -1388,7 +1392,7 @@ public class GpsLocationProvider implements LocationProviderInterface {
                     handleInjectNtpTime();
                     break;
                 case DOWNLOAD_XTRA_DATA:
-                    if (native_supports_xtra()) {
+                    if (mSupportsXtra) {
                         handleDownloadXtraData();
                     }
                     break;
@@ -1460,7 +1464,7 @@ public class GpsLocationProvider implements LocationProviderInterface {
     // XTRA Support
     private native void native_inject_time(long time, long timeReference, int uncertainty);
     private native boolean native_supports_xtra();
-    private native void native_inject_xtra_data(byte[] data, int length);
+    private native boolean native_inject_xtra_data(byte[] data, int length);
 
     // DEBUG Support
     private native String native_get_internal_state();
