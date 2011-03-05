@@ -12,7 +12,9 @@ LOCAL_SRC_FILES:= \
 
 LOCAL_MODULE:= libsurfaceflinger_client
 
-ifneq ($(BOARD_USES_ECLAIR_LIBCAMERA),true)
+# although we use BOARD_USES_ECLAIR_LIBCAMERA (so we make it static), we also need
+# the shared libcamera_client and libsurfaceflinger_client for mediaplayers to work...
+#ifneq ($(BOARD_USES_ECLAIR_LIBCAMERA),true)
 
 LOCAL_SHARED_LIBRARIES := \
 	libcutils \
@@ -28,8 +30,20 @@ endif
 
 include $(BUILD_SHARED_LIBRARY)
 
-else
+#else
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES:= \
+  ISurfaceComposer.cpp \
+  ISurface.cpp \
+  ISurfaceFlingerClient.cpp \
+  LayerState.cpp \
+  SharedBufferStack.cpp \
+  Surface.cpp \
+  SurfaceComposerClient.cpp
+
+LOCAL_MODULE:= libsurfaceflinger_client
 
 include $(BUILD_STATIC_LIBRARY)
 
-endif
+#endif

@@ -68,6 +68,11 @@ public:
     // The access (read/write, read only, or write only) is viewed from the
     // perspective of applications, not driver.
 
+    // Hack for getting X10mini libcamera.so to link
+    static const int ORIENTATION_LANDSCAPE;
+    static const int ORIENTATION;
+    static const int ORIENTATION_PORTRAIT;
+
     // Preview frame size in pixels (width x height).
     // Example value: "480x320". Read/Write.
     static const char KEY_PREVIEW_SIZE[];

@@ -23,6 +23,12 @@
 #include <camera/CameraParameters.h>
 
 namespace android {
+
+// Hack for getting X10mini libcamera.so to link
+const int CameraParameters::ORIENTATION_LANDSCAPE = 0;
+const int CameraParameters::ORIENTATION = 1;
+const int CameraParameters::ORIENTATION_PORTRAIT = 2;
+
 // Parameter keys to communicate between camera application and driver.
 const char CameraParameters::KEY_PREVIEW_SIZE[] = "preview-size";
 const char CameraParameters::KEY_SUPPORTED_PREVIEW_SIZES[] = "preview-size-values";

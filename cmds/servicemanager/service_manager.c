@@ -248,6 +248,7 @@ int svcmgr_handler(struct binder_state *bs,
 
 int main(int argc, char **argv)
 {
+    LOGE("=== servicemanager starting...");
     struct binder_state *bs;
     void *svcmgr = BINDER_SERVICE_MANAGER;
 
@@ -260,5 +261,6 @@ int main(int argc, char **argv)
 
     svcmgr_handle = svcmgr;
     binder_loop(bs, svcmgr_handler);
+    LOGE("=== binder_loop ended! Error:(%s)\n", strerror(errno));
     return 0;
 }
