@@ -382,7 +382,7 @@ public final class ShutdownThread extends Thread {
             Log.i(TAG, "Rebooting, reason: " + mRebootReason);
             if (mRebootReason != null) {
                 if (mRebootReason.equals("recovery")) {
-                    Log.i(TAG, "Touching /data/local/tmp/xrecovery");
+                    //Log.i(TAG, "Touching /data/local/tmp/xrecovery");
 	            try {
                         File xrecovery = new File("/data/local/tmp/", "xrecovery");
                         FileWriter writer = new FileWriter(xrecovery);
