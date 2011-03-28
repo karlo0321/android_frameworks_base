@@ -1360,6 +1360,9 @@ void AudioFlinger::PlaybackThread::readOutputParameters()
 
 status_t AudioFlinger::PlaybackThread::getRenderPosition(uint32_t *halFrames, uint32_t *dspFrames)
 {
+#ifdef BOARD_USES_ECLAIR_LIBAUDIO
+    return INVALID_OPERATION;
+#else
     if (halFrames == 0 || dspFrames == 0) {
         return BAD_VALUE;
     }
@@ -1369,6 +1372,7 @@ status_t AudioFlinger::PlaybackThread::getRenderPosition(uint32_t *halFrames, ui
     *halFrames = mBytesWritten/mOutput->frameSize();
 
     return mOutput->getRenderPosition(dspFrames);
+#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -3816,7 +3820,11 @@ void AudioFlinger::RecordThread::readInputParameters()
 
 unsigned int AudioFlinger::RecordThread::getInputFramesLost()
 {
+#ifdef BOARD_USES_ECLAIR_LIBAUDIO
+    return 0;
+#else
     return mInput->getInputFramesLost();
+#endif
 }
 
 // ----------------------------------------------------------------------------
