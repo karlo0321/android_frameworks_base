@@ -789,9 +789,55 @@ void android_os_Process_setApplicationObject(JNIEnv* env, jobject clazz,
     sp<IBinder> binder = ibinderForJavaObject(env, binderObject);
 }
 
+int kill_children (int parent, int sig) {
+	DIR *dp;	
+	FILE *fp;
+	char first_char;
+	char filename [256];
+	struct dirent *ep;     
+	dp = opendir ("/proc");
+	char temp [256];
+	int tmp_parent;
+	//LOGI("Opening /proc directory to search for the children of: %d",parent);
+	//return 0;
+	if (dp != NULL) {
+		while (ep = readdir (dp)) {
+			strcpy(filename, "/proc/");
+			first_char = ep->d_name[0];		
+			//printf ("First char:%c\n",first_char);
+			if (first_char >= '0' && first_char <='9') {
+		      		//puts (ep->d_name);
+				strcat(filename, ep->d_name);
+				strcat(filename, "/stat");
+				//puts (filename);
+				fp = fopen ( filename, "r" ) ;
+				if( fp == NULL ) {
+               				//LOGI("cannot open file %s", filename);
+               				continue;
+         			}
+				fscanf (fp, "%s", temp);
+				fscanf (fp, "%s", temp);
+				fscanf (fp, "%s", temp);
+				fscanf (fp, "%d", &tmp_parent);
+				fclose(fp);
+				if (tmp_parent == parent) {
+					kill_children(atoi(ep->d_name), sig);
+					LOGI("Killing child: %d of parent: %d",atoi(ep->d_name), tmp_parent);
+					kill(atoi(ep->d_name), sig);
+				}
+			}
+		}
+	closedir (dp);
+	}
+	else
+    		LOGI("Couldn't open the /proc directory");
+	return 0;
+}
+
 void android_os_Process_sendSignal(JNIEnv* env, jobject clazz, jint pid, jint sig)
 {
     if (pid > 0) {
+	kill_children(pid, sig);
         LOGI("Sending signal. PID: %d SIG: %d", pid, sig);
         kill(pid, sig);
     }
@@ -800,6 +846,7 @@ void android_os_Process_sendSignal(JNIEnv* env, jobject clazz, jint pid, jint si
 void android_os_Process_sendSignalQuiet(JNIEnv* env, jobject clazz, jint pid, jint sig)
 {
     if (pid > 0) {
+	kill_children(pid, sig);
         kill(pid, sig);
     }
 }
