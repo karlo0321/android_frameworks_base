@@ -687,10 +687,11 @@ public class AudioManager {
      */
     public void setSpeakerMediaOn(boolean on){
         IAudioService service = getService();
-	Log.e(TAG, "Setting speakerMediaon");
-	adjustVolume (ADJUST_SAME, MODE_CURRENT & FLAG_PLAY_SOUND);
+	//Log.e(TAG, "Setting speakerMediaon");
         try {
             service.setSpeakerMediaOn(on);
+	    //adjustVolume (ADJUST_SAME, MODE_CURRENT & FLAG_PLAY_SOUND);
+	    playSoundEffect(FX_KEY_CLICK, -1);
         } catch (RemoteException e) {
             Log.e(TAG, "Dead object in setSpeakerMediaOn", e);
         }
@@ -721,7 +722,7 @@ public class AudioManager {
 	//setMode(MODE_RINGTONE);
 	//this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         IAudioService service = getService();
-	Log.e(TAG, "Is speakerMediaon ?");
+	//Log.e(TAG, "Is speakerMediaon ?");
         try {
             return service.isSpeakerMediaOn();
         } catch (RemoteException e) {
