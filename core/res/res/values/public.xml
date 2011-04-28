@@ -1692,7 +1692,6 @@
   <public type="anim" name="bounce_interpolator" id="0x010a000a" />
   <public type="anim" name="linear_interpolator" id="0x010a000b" />
 
-
 <!--
   <public type="anim" name="semc_action_dialog_bg_enter" id="0x010a0028" />
   <public type="anim" name="semc_action_dialog_bg_exit" id="0x010a0029" />

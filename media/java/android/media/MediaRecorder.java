@@ -96,9 +96,10 @@ public class MediaRecorder
         native_setup(new WeakReference<MediaRecorder>(this));
     }
     // The Following is for making SE Stock Camera app proceed a bit. Still it crashes though...
-    /*public void setParameters(String keyValuePairs) {
-        AudioSystem.setParameters(keyValuePairs);
-    }*/
+    public void setParameters(String keyValuePairs) {
+        //AudioSystem.setParameters(keyValuePairs);
+    }
+
     /**
      * Sets a Camera to use for recording. Use this function to switch
      * quickly between preview and capture mode without a teardown of
