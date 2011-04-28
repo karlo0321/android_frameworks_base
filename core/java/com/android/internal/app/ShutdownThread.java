@@ -43,6 +43,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
+import java.io.File;
+import java.io.FileWriter;
+
 public final class ShutdownThread extends Thread {
     // constants
     private static final String TAG = "ShutdownThread";
@@ -416,6 +419,20 @@ public final class ShutdownThread extends Thread {
     public static void rebootOrShutdown(boolean reboot, String reason) {
         if (reboot) {
             Log.i(TAG, "Rebooting, reason: " + reason);
+            if (mRebootReason != null) {
+                if (mRebootReason.equals("recovery")) {
+                    //Log.i(TAG, "Touching /data/local/tmp/xrecovery");
+	            try {
+                        File xrecovery = new File("/data/local/tmp/", "xrecovery");
+                        FileWriter writer = new FileWriter(xrecovery);
+                        writer.write('1');
+                        writer.flush();
+                        writer.close();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Exception writing /data/local/tmp/xrecovery file", e);
+	            }
+                }
+            }
             try {
                 Power.reboot(reason);
             } catch (Exception e) {
