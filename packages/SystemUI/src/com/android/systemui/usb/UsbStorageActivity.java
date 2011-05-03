@@ -107,7 +107,7 @@ public class UsbStorageActivity extends Activity
                 Log.w(TAG, "Failed to get StorageManager");
             }
         }
-        
+        Log.w(TAG, "Created StorageManager");
         mUIHandler = new Handler();
 
         HandlerThread thr = new HandlerThread("SystemUI UsbStorageActivity");
