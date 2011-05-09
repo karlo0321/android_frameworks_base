@@ -977,12 +977,12 @@ public class AudioService extends IAudioService.Stub {
 	//Log.e(TAG, "setSpeakerMediaOn called!");
         if (on) {
 	    Log.e(TAG, "Routing to speaker");
-            setSpeakerphoneOn(true);
-            setMode(AudioSystem.MODE_NORMAL, null);
+            AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_SPEAKER);
+            mForcedUseForComm = AudioSystem.FORCE_SPEAKER;
         } else {
 	    Log.e(TAG, "Routing to headphones");
-            setSpeakerphoneOn(false);
-            setMode(AudioSystem.MODE_NORMAL, null);
+            AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_WIRED_ACCESSORY);
+            mForcedUseForComm = AudioSystem.FORCE_WIRED_ACCESSORY;
         }
     }
 
