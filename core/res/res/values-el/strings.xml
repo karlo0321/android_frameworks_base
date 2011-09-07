@@ -729,9 +729,9 @@
     <string name="low_internal_storage_view_title" msgid="1399732408701697546">"Απομένει λίγος ελεύθερος χώρος"</string>
     <string name="low_internal_storage_view_text" msgid="635106544616378836">"Έχει απομείνει λίγος ελεύθερος αποθηκευτικός χώρος στο τηλέφωνο."</string>
     <string name="ok" msgid="5970060430562524910">"OK"</string>
-    <string name="cancel" msgid="6442560571259935130">"Ακύρωση"</string>
+    <string name="cancel" msgid="6442560571259935130">"Άκυρο"</string>
     <string name="yes" msgid="5362982303337969312">"OK"</string>
-    <string name="no" msgid="5141531044935541497">"Ακύρωση"</string>
+    <string name="no" msgid="5141531044935541497">"Άκυρο"</string>
     <string name="dialog_alert_title" msgid="2049658708609043103">"Προσοχή"</string>
     <string name="capital_on" msgid="1544682755514494298">"Ενεργοποιημένο"</string>
     <string name="capital_off" msgid="6815870386972805832">"Απενεργοποίηση"</string>
@@ -793,7 +793,7 @@
     <string name="sms_control_title" msgid="7296612781128917719">"Αποστολή μηνυμάτων SMS"</string>
     <string name="sms_control_message" msgid="1289331457999236205">"Αποστέλλεται μεγάλος αριθμός μηνυμάτων SMS. Επιλέξτε \"OK\" για συνέχεια, ή \"Ακύρωση\" για διακοπή αποστολής."</string>
     <string name="sms_control_yes" msgid="2532062172402615953">"OK"</string>
-    <string name="sms_control_no" msgid="1715320703137199869">"Ακύρωση"</string>
+    <string name="sms_control_no" msgid="1715320703137199869">"Άκυρο"</string>
     <string name="date_time_set" msgid="5777075614321087758">"Ορισμός"</string>
     <string name="default_permission_group" msgid="2690160991405646128">"Προεπιλεγμένο"</string>
     <string name="no_permissions" msgid="7283357728219338112">"Δεν απαιτούνται άδειες"</string>
