@@ -1673,6 +1673,13 @@ public final class Settings {
          */
         public static final String VIBRATE_IN_CALL = "vibrate-in-call";
 
+	/**
+         * Whether ringtones should loop during phone calls or not.
+         *
+         * @hide
+         */
+        public static final String RINGER_LOOP = "pref_ringer_loop";
+        
         /**
          * The mapping of stream type (integer) to its setting.
          */
