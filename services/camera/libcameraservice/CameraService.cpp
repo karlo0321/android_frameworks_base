@@ -1148,6 +1148,7 @@ bool CameraService::Client::recordingEnabled() {
 
 status_t CameraService::Client::autoFocus() {
 #ifdef BOARD_CAMERA_NO_AUTOFOCUS
+    notifyCallback(CAMERA_MSG_FOCUS, 1, 0, 0);
     return NO_ERROR;
 #else
     LOG1("autoFocus (pid %d)", getCallingPid());
