@@ -169,6 +169,7 @@
     <string name="global_actions_toggle_airplane_mode" msgid="5884330306926307456">"Tryb samolotowy"</string>
     <string name="global_actions_airplane_mode_on_status" msgid="2719557982608919750">"Tryb samolotowy jest włączony"</string>
     <string name="global_actions_airplane_mode_off_status" msgid="5075070442854490296">"Tryb samolotowy jest wyłączony"</string>
+    <string name="global_action_screenshot">Zrzut ekranu</string>
     <string name="safeMode" msgid="2788228061547930246">"Tryb awaryjny"</string>
     <string name="android_system_label" msgid="6577375335728551336">"System Android"</string>
     <string name="permgrouplab_costMoney" msgid="5429808217861460401">"Usługi płatne"</string>
@@ -206,8 +207,8 @@
     <string name="permdesc_receiveSms" msgid="6298292335965966117">"Pozwala aplikacjom na odbieranie i przetwarzanie wiadomości SMS. Szkodliwe aplikacje mogą monitorować wiadomości lub usuwać je bez wyświetlania ich użytkownikowi."</string>
     <string name="permlab_receiveMms" msgid="8894700916188083287">"odbieranie wiadomości MMS"</string>
     <string name="permdesc_receiveMms" msgid="4563346832000174373">"Pozwala aplikacji na odbieranie i przetwarzanie wiadomości MMS. Szkodliwe aplikacje mogą monitorować wiadomości lub usuwać je bez pokazywania ich użytkownikowi."</string>
-    <string name="permlab_receiveEmergencyBroadcast" msgid="1803477660846288089">"odbiór emisji alarmowych"</string>
-    <string name="permdesc_receiveEmergencyBroadcast" msgid="7118393393716546131">"Umożliwia aplikacji odbiór i przetwarzanie wiadomości pochodzących z emisji alarmowych. To pozwolenie jest dostępne tylko dla aplikacji systemowych."</string>
+    <string name="permlab_receiveEmergencyBroadcast">odbieranie komunikatów alarmowych</string>
+    <string name="permdesc_receiveEmergencyBroadcast">Pozwala aplikacji odbierać i przetwarzać komunikaty alarmowe. To uprawnienie jest dostępne tylko dla aplikacji systemowych.</string>
     <string name="permlab_sendSms" msgid="5600830612147671529">"wysyłanie wiadomości SMS"</string>
     <string name="permdesc_sendSms" msgid="1946540351763502120">"Pozwól aplikacjom na wysyłanie wiadomości SMS. Szkodliwe aplikacje mogą generować koszty, wysyłając wiadomości bez wiedzy użytkownika."</string>
     <string name="permlab_readSms" msgid="4085333708122372256">"czytanie wiadomości SMS lub MMS"</string>
@@ -294,6 +295,8 @@
     <string name="permdesc_movePackage" msgid="6323049291923925277">"Zezwala aplikacji na przeniesienie zasobów aplikacji z nośnika wewnętrznego na zewnętrzny i odwrotnie."</string>
     <string name="permlab_readLogs" msgid="6615778543198967614">"odczyt wrażliwych danych dziennika"</string>
     <string name="permdesc_readLogs" msgid="8896449437464867766">"Umożliwia aplikacjom odczyt z różnych plików dzienników systemowych. Pozwala to poznać ogólne informacje na temat korzystania z telefonu, co potencjalnie może obejmować również informacje prywatne lub osobiste."</string>
+    <string name="permlab_preventpower">zabezpiecza przycisk POWER</string>
+    <string name="permdesc_preventpower">Umożliwia aplikacji nadpisanie ustawień przycisku POWER</string>
     <string name="permlab_diagnostic" msgid="8076743953908000342">"czytanie/zapisywanie w zasobach należących do diagnostyki"</string>
     <string name="permdesc_diagnostic" msgid="3121238373951637049">"Pozwala aplikacji na czytanie i zapisywanie we wszystkich zasobach posiadanych przez diagnozowaną grupę, jak na przykład pliki w katalogu /dev. Może to potencjalnie wpłynąć na stabilność i bezpieczeństwo systemu. Powinno być wykorzystywane TYLKO w celach diagnozowania sprzętu przez producenta lub operatora."</string>
     <string name="permlab_changeComponentState" msgid="79425198834329406">"włączanie lub wyłączanie składników aplikacji"</string>
