@@ -24,7 +24,7 @@
 
 #include <utils/Log.h>
 #include <utils/threads.h>
-
+#include <stdlib.h>
 #include <surfaceflinger/ISurfaceComposer.h>
 
 #if defined(HAVE_PTHREADS)
@@ -58,6 +58,9 @@ int main(int argc, char** argv)
 
         IPCThreadState::self()->joinThreadPool();
 
+    }
+    else {
+    	system("/sbin/bootlogo");
     }
     return 0;
 }
