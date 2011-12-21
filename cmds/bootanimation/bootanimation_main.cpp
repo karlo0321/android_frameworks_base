@@ -60,7 +60,7 @@ int main(int argc, char** argv)
 
     }
     else {
-    	system("/sbin/bootlogo");
+    	system("/sbin/bootlogo minicm");
     }
     return 0;
 }
