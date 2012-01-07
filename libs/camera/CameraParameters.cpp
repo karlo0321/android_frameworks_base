@@ -255,32 +255,11 @@ const char CameraParameters::CAF_ON[] = "caf-on";
 const char CameraParameters::CONTINUOUS_AF_OFF[] = "caf-off";
 const char CameraParameters::CONTINUOUS_AF_ON[] = "caf-on";
 
-//LGE Victor
-const char CameraParameters::FOCUS_MODE_MANUAL[] = "manual";
-const char CameraParameters::KEY_MANUAL_FOCUS[] = "manual-focus";
-const char CameraParameters::KEY_LUMA_ADAPTION[] = "luma-adaption";
-const char CameraParameters::KEY_VT_MODE[] = "vt-mode";
+//dx: f**kin SE .!.
+const char CameraParameters::ORIENTATION[] = "orientation";
+const char CameraParameters::ORIENTATION_PORTRAIT[] = "orientation-portrait";
+const char CameraParameters::ORIENTATION_LANDSCAPE[] = "orientation-landscape";
 
-#ifdef CAF_CAMERA_GB_REL
-static const char* portrait = "portrait";
-static const char* landscape = "landscape";
-
-int CameraParameters::getOrientation() const
-{
-    const char* orientation = get("orientation");
-    if (orientation && !strcmp(orientation, portrait))
-        return CAMERA_ORIENTATION_PORTRAIT;
-    return CAMERA_ORIENTATION_LANDSCAPE;
-}
-void CameraParameters::setOrientation(int orientation)
-{
-    if (orientation == CAMERA_ORIENTATION_PORTRAIT) {
-        set("orientation", portrait);
-    } else {
-         set("orientation", landscape);
-    }
-}
-#endif
 
 CameraParameters::CameraParameters()
                 : mMap()

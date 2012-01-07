@@ -2947,7 +2947,7 @@ status_t OMXCodec::allocateBuffersOnPort(OMX_U32 portIndex) {
 
     sp<IMemory> mem;
 #else
-    mDealer[portIndex] = new MemoryDealer(totalSize, "OMXCodec");
+    mDealer[portIndex] = new MemoryDealer(totalSize);	// dx: use eclair mem dealer
 #endif
 
 #ifdef USE_GETBUFFERINFO
