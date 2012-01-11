@@ -469,13 +469,6 @@ void CameraParameters::getVideoSize(int *width, int *height) const
     parse_pair(p, width, height, 'x');
 }
 
-void CameraParameters::setPreviewFpsRange(int minFPS, int maxFPS)
-{
-    char str[32];
-    sprintf(str,"%d,%d",minFPS,maxFPS);
-    set(KEY_PREVIEW_FPS_RANGE,str);
-}
-
 void CameraParameters::setPreviewFrameRate(int fps)
 {
     set(KEY_PREVIEW_FRAME_RATE, fps);
