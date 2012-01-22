@@ -2326,6 +2326,23 @@ public final class Settings {
         public static final String STATUS_BAR_CLOCK = "status_bar_clock";
 
         /**
+         * Whether to Center the clock in status bar
+         * 0: don't center the clock
+         * 1: center the clock
+         * default: 1
+         * @hide
+         */
+        public static final String STATUS_BAR_CENTERCLOCK = "status_bar_centerclock";
+
+        /**
+         * The color to render the status bar clock
+         * hex value including alpha
+         * default: ffffff00
+         * @hide
+         */
+        public static final String STATUS_BAR_CLOCKCOLOR = "status_bar_clockcolor";
+
+        /**
          * Whether to show the signal text or signal bars.
          * default: 0
          * 0: show signal bars

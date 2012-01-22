@@ -29,6 +29,26 @@
     android:descendantFocusability="afterDescendants"
     >
 
+     <LinearLayout
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.0">
+
+        <com.android.systemui.statusbar.CenterClock
+            android:textAppearance="@*android:style/TextAppearance.StatusBar.Icon"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:singleLine="true"
+            android:layout_weight="1.0" />
+     </LinearLayout>
+
     <LinearLayout android:id="@+id/icons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -161,6 +181,7 @@
     </LinearLayout>
 
     <LinearLayout android:id="@+id/ticker"
+        android:background="@drawable/statusbar_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="6dip"
