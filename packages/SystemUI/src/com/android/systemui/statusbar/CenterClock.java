@@ -155,7 +155,14 @@ public class CenterClock extends TextView {
 
     final void updateCenterClock() {
         mCalendar.setTimeInMillis(System.currentTimeMillis());
-        setTextColor(mClockColor);
+        if (mClockColor == 1) {
+            setTextColor(-1);
+            ContentResolver resolver = mContext.getContentResolver();
+            Settings.System.putInt(resolver, Settings.System.STATUS_BAR_CLOCKCOLOR, -1);
+        }
+        else {
+            setTextColor(mClockColor);
+        }
         setText(getSmallTime());
     }
 
