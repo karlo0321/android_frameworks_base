@@ -47,6 +47,10 @@ int main(int argc, char** argv)
     int noBootAnimation = atoi(value);
     ALOGI_IF(noBootAnimation,  "boot animation disabled");
     if (!noBootAnimation) {
+        while (0 == system("pidof bootlogo > /dev/null")) {
+            //LOGE("boologo is still running...");
+            sleep(1);
+        }
 
         sp<ProcessState> proc(ProcessState::self());
         ProcessState::self()->startThreadPool();
