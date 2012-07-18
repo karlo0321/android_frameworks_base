@@ -3751,6 +3751,10 @@ public class View implements Drawable.Callback, Drawable.Callback2, KeyEvent.Cal
         mScrollCache.fadingEdgeLength = length;
     }
 
+    protected final boolean shouldMirror() {
+        return true;
+    }
+
     /**
      * Returns the size of the horizontal faded edges used to indicate that more
      * content in this view is visible.
