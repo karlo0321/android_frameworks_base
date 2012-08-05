@@ -45,6 +45,7 @@ import android.net.NetworkUtils;
 import android.net.RouteInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
+import android.net.wifi.WifiNative;
 import android.os.Handler;
 import android.os.INetworkManagementService;
 import android.os.RemoteCallbackList;
@@ -153,6 +154,8 @@ public class NetworkManagementService extends INetworkManagementService.Stub
     private SparseBooleanArray mUidRejectOnQuota = new SparseBooleanArray();
 
     private volatile boolean mBandwidthControlEnabled;
+
+    private String mLastDriverLoaded="";
 
     /**
      * Constructs a new NetworkManagementService instance
@@ -930,13 +933,18 @@ public class NetworkManagementService extends INetworkManagementService.Stub
             Resources resources = mContext.getResources();
             if (resources.getBoolean(com.android.internal.R.bool.config_wifiApFirmwareReload))
                 wifiFirmwareReload(wlanIface, "AP");
+            if (SystemProperties.getBoolean("wifi.hotspot.ti", false)) {
+                NetworkUtils.enableInterface(softapIface);
+                mConnector.doCommand(String.format("softap startap " + softapIface));
+            }
             if (wifiConfig == null) {
                 mConnector.execute("softap", "set", wlanIface, softapIface);
             } else {
                 mConnector.execute("softap", "set", wlanIface, softapIface, wifiConfig.SSID,
                         getSecurityType(wifiConfig), wifiConfig.preSharedKey);
             }
-            mConnector.execute("softap", "startap");
+            if(!SystemProperties.getBoolean("wifi.hotspot.ti", false))
+                mConnector.execute("softap", "startap");
         } catch (NativeDaemonConnectorException e) {
             throw e.rethrowAsParcelableException();
         }
@@ -957,10 +965,38 @@ public class NetworkManagementService extends INetworkManagementService.Stub
     @Override
     public void wifiFirmwareReload(String wlanIface, String mode) {
         mContext.enforceCallingOrSelfPermission(CONNECTIVITY_INTERNAL, TAG);
+
+        if(SystemProperties.getBoolean("wifi.hotspot.ti", false)) {
+            boolean loaded = true;
+            if ("AP".equals(mode)) {
+                if (!mLastDriverLoaded.equals("AP")) {
+                    WifiNative.unloadDriver();
+                    try {
+                        loaded = WifiNative.loadHotspotDriver();
+                    } catch (Exception e) {
+                        throw new IllegalStateException("Error loading Hotspot driver ", e);
+                    }
+                }
+            } else {
+                if (mLastDriverLoaded.equals("AP")) {
+                    WifiNative.unloadHotspotDriver();
+                    try {
+                        loaded = WifiNative.loadDriver();
+                    } catch (Exception e) {
+                        throw new IllegalStateException("Error loading Sta driver ", e);
+                    }
+                }
+            }
+            if (loaded) {
+                mLastDriverLoaded = mode;
+            }
+       } else {
+
         try {
             mConnector.execute("softap", "fwreload", wlanIface, mode);
         } catch (NativeDaemonConnectorException e) {
             throw e.rethrowAsParcelableException();
+        }
         }
     }
 
@@ -969,6 +1005,11 @@ public class NetworkManagementService extends INetworkManagementService.Stub
         mContext.enforceCallingOrSelfPermission(CONNECTIVITY_INTERNAL, TAG);
         try {
             mConnector.execute("softap", "stopap");
+            if (SystemProperties.getBoolean("wifi.hotspot.ti", false)) {
+                String softApIface = SystemProperties.get("wifi.ap.interface", "tiap0");
+                mConnector.doCommand("softap stop " + softApIface);
+            }
+            else
             mConnector.execute("softap", "stop", wlanIface);
             wifiFirmwareReload(wlanIface, "STA");
         } catch (NativeDaemonConnectorException e) {
