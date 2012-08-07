@@ -40,7 +40,7 @@ static int doCommand(const char *ifname, const char *cmd, char *replybuf, int re
 
     //ALOGE("CMD [%s]:", cmd);
     if ((err = ::wifi_command(ifname, cmd, replybuf, &reply_len)) != 0) {
-        ALOGE("ERR %d, returns -1", err);
+        //ALOGE("ERR %d, returns -1", err);
         return -1;
     }
     else {
