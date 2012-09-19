@@ -5101,6 +5101,17 @@ public final class Settings {
         public static final String INCALL_POWER_BUTTON_BEHAVIOR = "incall_power_button_behavior";
 
         /**
+         * What happens when the user presses the Back button while in-call
+         * and the screen is on.<br/>
+         * <b>Values:</b><br/>
+         * 1 - The Back button goes back. (Default behavior)<br/>
+         * 2 - The Back button hangs up the current call.<br/>
+         *
+         * @hide
+         */
+        public static final String INCALL_BACK_BUTTON_BEHAVIOR = "incall_back_button_behavior";
+
+        /**
          * INCALL_POWER_BUTTON_BEHAVIOR value for "turn off screen".
          * @hide
          */
@@ -5111,6 +5122,19 @@ public final class Settings {
          * @hide
          */
         public static final int INCALL_POWER_BUTTON_BEHAVIOR_HANGUP = 0x2;
+
+        /**
+         * INCALL_BACK_BUTTON_BEHAVIOR value for "turn off screen".
+         * @hide
+         */
+        public static final int INCALL_BACK_BUTTON_BEHAVIOR_BACK = 0x1;
+
+
+        /**
+         * INCALL_BACK_BUTTON_BEHAVIOR value for "hang up".
+         * @hide
+         */
+        public static final int INCALL_BACK_BUTTON_BEHAVIOR_HANGUP = 0x2;
 
         /**
          * INCALL_POWER_BUTTON_BEHAVIOR default value.
@@ -5148,6 +5172,13 @@ public final class Settings {
          */
         public static final int RING_HOME_BUTTON_BEHAVIOR_DEFAULT =
                 RING_HOME_BUTTON_BEHAVIOR_DO_NOTHING;
+
+        /**
+         * INCALL_BACK_BUTTON_BEHAVIOR default value.
+         * @hide
+         */
+        public static final int INCALL_BACK_BUTTON_BEHAVIOR_DEFAULT =
+                INCALL_BACK_BUTTON_BEHAVIOR_BACK;
 
         /**
          * The current night mode that has been selected by the user.  Owned
