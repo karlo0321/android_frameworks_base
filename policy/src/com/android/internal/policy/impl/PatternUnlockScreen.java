@@ -21,12 +21,12 @@ import android.content.res.Configuration;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.security.KeyStore;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.view.KeyEvent;
 import android.util.Log;
 import com.android.internal.R;
 import com.android.internal.widget.LinearLayoutWithDefaultTouchRecepient;
@@ -215,7 +215,9 @@ class PatternUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_HOME) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                || keyCode == KeyEvent.KEYCODE_HOME
+                || keyCode == KeyEvent.KEYCODE_MENU) {
             event.startTracking();
             return true;
         }
@@ -224,8 +226,9 @@ class PatternUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_HOME) {
-            LockScreen.handleHomeLongPress(getContext());
+        if (LockScreen.handleKeyLongPress(getContext(), keyCode)) {
+            mCallback.pokeWakelock();
+            return true;
         }
         return false;
     }
